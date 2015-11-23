@@ -46,4 +46,28 @@ object week2 extends App{
 	/** sqrt function in terms of fixed point */
 	def sqrt(x:Double):Double=fixedPoint(averageDamp(y=>x/y))(1)
 	println("Sqrt of 2: "+sqrt(2))
+
+	val x=new Rational(1,3)
+	val y=new Rational(5,7)
+	val z=new Rational(3,2)
+	println("Rational x-y-z: "+(x - y - z))
+}
+class Rational(x:Int,y:Int){
+	require(y!=0,"Denominator should be non-zero")
+
+	private def gcd(x:Int,y:Int):Int=
+		if (y==0) x else gcd(y,x%y)
+	val numer=x/gcd(x,y)
+	val denom=y/gcd(x,y)
+	def this(x:Int) = this(x,1)
+
+	def +(that:Rational):Rational=
+		new Rational(
+			numer*that.denom + denom*that.numer,
+			denom*that.denom)
+	def unary_- :Rational= new Rational(-numer,denom)
+	def -(that:Rational):Rational=this + -that 
+	def <(that:Rational):Boolean= numer*that.denom < that.numer*denom
+	def max(that:Rational):Rational= if(this<that) that else this
+	override def toString()=numer+"/"+denom	
 }
