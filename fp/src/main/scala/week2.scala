@@ -1,4 +1,5 @@
-object week2 extends App{
+package week2
+object Week2 extends App{
 	
 	/** Higher-Order Function accepting another function */
 	def sum(f:Int=>Int,a:Int,b:Int):Int={

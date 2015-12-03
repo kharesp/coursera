@@ -1,3 +1,4 @@
+package week3
 abstract class IntSet{
 	def incl(x:Int):IntSet
 	def contains(x:Int):Boolean
@@ -25,7 +26,7 @@ class NonEmpty(elem:Int,left:IntSet,right:IntSet) extends IntSet{
 	def union(other:IntSet):IntSet = ((left union right) union other) incl elem
 }
 
-object week3 extends App{
+object Week3 extends App{
 	val tree= new NonEmpty(3, Empty, Empty).incl(4)
 	val other=new NonEmpty(2,Empty,Empty).incl(5)
         val newTree=tree union other	

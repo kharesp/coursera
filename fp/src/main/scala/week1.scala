@@ -1,4 +1,5 @@
-object week1 extends App{
+package week1
+object Week1 extends App{
 	/** Non-terminating expression */
 	def loop:Boolean= loop 
 	
