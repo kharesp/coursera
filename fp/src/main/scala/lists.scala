@@ -6,28 +6,34 @@ object Week5 extends App
 		case List() => List() 
 		case y::ys => insert(y, isort(ys))
 	}
+
 	def insert(x: Int, xs: List[Int]): List[Int] = xs match {
 		case List() => List(x) 
 		case y::ys => if (x<=y) x::xs else y::(insert(x,ys))
 	}
+
 	def init[T](xs: List[T]): List[T] = xs match {
 		case List() => throw new Error("Can't take init of empty list") 
 		case List(x) => List()
 		case y::ys => y:: init(ys)
 	}
+
 	def last[T](xs: List[T]): T = xs match {
 		case List() => throw new Error("can't take last of empty list") 
 		case List(x) => x 
 		case y::ys => last(ys) 
 	}
+
 	def concat[T](xs: List[T], ys: List[T]): List[T] = xs match {
 		case List() => ys 
 		case z::zs => z::concat(zs,ys)
 	}
+
 	def reverse[T](xs: List[T]): List[T] = xs match {
 		case List() => xs
 		case y::ys => reverse(ys) ++ List(y)
 	}
+
 	/** Also, we can define removeAt as: 
 	  * def removeAt[T](xs: List[T], n: Int): List[T] =
 	  * 		(xs take n) ++ (xs drop n+1)
@@ -36,6 +42,7 @@ object Week5 extends App
 	 	case List() => xs 
 		case y::ys => if (n==0) ys else y::removeAt(ys,n-1)
 	}
+
 	/**
 	  * implicit type parameters 
 	  * We don't have to pass the implicit type parameter. 
@@ -55,18 +62,22 @@ object Week5 extends App
 			merge(msort(l),msort(r))
 		}
 	}
+
 	def map[T,U](xs: List[T])(f: T=>U): List[U] = xs match {
 		case Nil => Nil
 		case y::ys => f(y)::map(ys)(f)
 	}
+
 	def filter[T](xs: List[T])(f: T => Boolean): List[T] = xs match {
 		case Nil => Nil
 		case y::ys => if (f(y)) y::filter(ys)(f) else filter(ys)(f)
 	}
+
 	def filterNot[T](xs: List[T])(f: T=>Boolean): List[T] = xs match {
 		case Nil => Nil 
 		case x::xs1 => if (!f(x)) x::filterNot(xs1)(f) else filterNot(xs1)(f)
 	}
+
 	def partition[T](xs: List[T])(f: T=>Boolean): (List[T],List[T])= xs match {
 		case Nil => (Nil,Nil)
 		case x::xs1 => 
@@ -75,14 +86,17 @@ object Week5 extends App
 			if (f(x)) (x::l,r) else (l,x::r)
 		}
 	}
+
 	def takeWhile[T](xs: List[T])(f: T=>Boolean): List[T] = xs match {
 		case Nil => Nil 
 		case x::xs1 => if (f(x)) x::takeWhile(xs1)(f) else Nil
 	}		
+
 	def dropWhile[T](xs: List[T])(f: T=> Boolean): List[T] = xs match {
 		case Nil => Nil 
 		case x::xs1 => if (f(x)) dropWhile(xs1)(f) else xs
 	}
+
 	def span[T](xs: List[T])(f: T => Boolean): (List[T],List[T]) = xs match {
 		case Nil => (Nil,Nil)
 		case x::xs1 => {
@@ -90,6 +104,7 @@ object Week5 extends App
 			if (f(x)) (x::l,r) else (Nil,xs)
 		}
 	}
+
 	def pack[T](xs: List[T]): List[List[T]] = xs match {
 		case Nil => Nil
 		case x::xs1 => {
@@ -97,8 +112,29 @@ object Week5 extends App
 		 	l::pack(r)
 		}
 	}
+
 	def encode[T](xs: List[T]): List[(T,Int)] = 
 			map(pack(xs))(l => (l.head,l.length))
+  	
+	def foldLeft[T,U](xs: List[T])(z: U)(op: (U,T)=>U): U = xs match {
+		case Nil => z 
+		case x::xs1 => foldLeft(xs1)(op(z,x))(op)
+	}
 
-
+	def reduceLeft[T](xs: List[T])(op: (T,T) => T) = xs match {
+		case Nil => throw new Error("Nil.reduceLeft")
+		case x::xs1 => foldLeft(xs1)(x)(op)
+	}
+	
+	def foldRight[T,U](xs: List[T])(z: U)(op: (T,U)=>U): U = xs match {
+		case Nil => z 
+		case x::xs1 => op(x, foldRight(xs1)(z)(op))
+	}
+	
+	def reduceRight[T](xs: List[T])(op: (T,T)=>T): T = xs match {
+		case Nil => throw new Error("Nil.reduceRight")
+		case x::Nil => x 
+		case x::xs1 => op(x,reduceRight(xs1)(op))
+	}
+	
 }
